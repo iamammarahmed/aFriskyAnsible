@@ -75,8 +75,8 @@ sudo nano /etc/ansible/ansible.cfg
 sudo touch /var/log/ansible.log
 
 * Change ownership and permission of ansible.log
-sudo chmod 770 ansible.log
-sudo chown abuser:ansible ansible.log
+sudo chmod 770 /var/log/ansible.log
+sudo chown abuser:ansible /var/log/ansible.log
 
 # Create Amazone Machine Image after this step of machine
 
