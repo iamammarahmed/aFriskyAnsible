@@ -15,6 +15,7 @@ sudo su abuser
 
 # Enable Passwordless Communication
 
+-----------------******* METHOD #01 *******--------------------
 * Go to SSH Directory
 cd /etc/ssh
 sudo nano sshd_config
@@ -35,6 +36,23 @@ ssh-keygen
 
 * [Optional] Copying SSH key from one machine to other machin
 ssh-copy-id ip_address
+
+-----------------******* METHOD #02 *******--------------------
+# Create local key
+ssh-keygen
+cat id_rsa.pub >> authorized_keys
+
+# Copy the instance public key (multi.pem) to hduser's directory
+sudo su
+cp /home/ubuntu/.ssh/multi.pem /home/hduser/.ssh/
+chown hduser:hadoop /home/hduser/.ssh/multi.pem
+exit
+
+##Configure SSH Password less logins
+sudo su -c touch /home/hduser/.ssh/config; echo "Host *\n StrictHostKeyChecking no\n
+UserKnownHostsFile=/dev/null" > /home/hduser/.ssh/config
+sudo service ssh restart
+
 
 # Installing Ansible on machine i.e. master
 sudo apt-get install software-properties-common
