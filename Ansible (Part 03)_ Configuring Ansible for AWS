@@ -4,10 +4,17 @@
 
 *******************************************************
 
+# Disable Lock on cache and log
+sudo rm /var/cache/apt/archives/lock
+sudo rm /var/lib/dpkg/lock
+
 # Install pip
 sudo apt-get install python-pip
+or 
+sudo apt-get install python-pip python-dev build-essential -y
 
 # Install boto3 using pip
+sudo pip install --upgrade pip
 pip install boto3
 
 ------------******* OPTIONAL ********-------------------
@@ -29,4 +36,6 @@ touch config
 [default]
 region=us-east-1
 
+
+# Install boto for AWS
 
