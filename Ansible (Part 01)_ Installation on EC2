@@ -78,6 +78,16 @@ sudo touch /var/log/ansible.log
 sudo chmod 770 /var/log/ansible.log
 sudo chown abuser:ansible /var/log/ansible.log
 
+# Install boto for AWS
+
+* Disable Lock on cache and log
+sudo rm /var/cache/apt/archives/lock
+sudo rm /var/lib/dpkg/lock
+sudo apt-get install python-pip python-dev build-essential -y
+sudo pip install --upgrade pip
+sudo pip install boto
+sudo pip install boto3
+
 # Create Amazone Machine Image after this step of machine
 
 # Launch 2 EC2 instances on AWS using above AMI
