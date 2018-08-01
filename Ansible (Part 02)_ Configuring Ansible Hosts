@@ -1,0 +1,36 @@
+*******************************************************
+
+		CONFIGURING ANSIBLE FOR OTHER MACHINES
+
+*******************************************************
+
+# Configure Ansible Inventory Management i.e. hosts file
+
+* Goto hosts file directory
+cd /etc/ansible
+
+* Backup ansible.cfg file
+sudo cp ansible.cfg ansible.cfg.original
+
+* Add groups and nodes to hosts file
+sudo nano hosts
+
+* Add and Save following groups in hosts of master/controller machine only
+[local]
+localhost
+
+[apache]
+private_ip_address
+
+[mysql]
+private_ip_address
+
+# See list of all ansible hosts
+ansible all --list-hosts
+
+# Check all nodes connected and ssh is enable
+ansible apache -m ping
+
+
+
+
