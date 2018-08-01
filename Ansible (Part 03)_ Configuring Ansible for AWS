@@ -1,0 +1,32 @@
+*******************************************************
+
+  CONFIGURING ANSIBLE FOR AWS CLOUD (MASTER/CONTROLLER)
+
+*******************************************************
+
+# Install pip
+sudo apt-get install python-pip
+
+# Install boto3 using pip
+pip install boto3
+
+------------******* OPTIONAL ********-------------------
+# Create AWS hidden directory
+mkdir .aws
+
+# Create credentials file 
+touch credentials
+
+# Paste your AWS Credentials in credentials file
+[default]
+aws_access_key_id = YOUR_ACCESS_KEY
+aws_secret_access_key = YOUR_SECRET_KEY
+
+# Create config file
+touch config
+
+# Paste default region of AWS in config file
+[default]
+region=us-east-1
+
+
