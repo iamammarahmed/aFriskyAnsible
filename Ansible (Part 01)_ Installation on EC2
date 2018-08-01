@@ -44,13 +44,13 @@ cat id_rsa.pub >> authorized_keys
 
 # Copy the instance public key (multi.pem) to hduser's directory
 sudo su
-cp /home/ubuntu/.ssh/multi.pem /home/hduser/.ssh/
-chown hduser:hadoop /home/hduser/.ssh/multi.pem
+cp /home/ubuntu/.ssh/multi.pem /home/abuser/.ssh/
+chown abuser:hadoop /home/hduser/.ssh/multi.pem
 exit
 
 ##Configure SSH Password less logins
-sudo su -c touch /home/hduser/.ssh/config; echo "Host *\n StrictHostKeyChecking no\n
-UserKnownHostsFile=/dev/null" > /home/hduser/.ssh/config
+sudo su -c touch /home/abuser/.ssh/config; echo "Host *\n StrictHostKeyChecking no\n
+UserKnownHostsFile=/dev/null" > /home/abuser/.ssh/config
 sudo service ssh restart
 
 
