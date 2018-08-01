@@ -1,0 +1,21 @@
+*******************************************************
+
+		CUSTOMIZING ANSIBLE hosts FILE
+
+*******************************************************
+
+# Create hosts in home direcotry
+touch hosts
+
+# Add Groups and IP address of nodes/hosts in above file
+nano hosts
+
+# Add following lines it hosts
+[local]
+localhost
+
+[mynode]
+private_ip_address
+
+# Test customized hosts file
+ansible mynode -i hosts -m ping
