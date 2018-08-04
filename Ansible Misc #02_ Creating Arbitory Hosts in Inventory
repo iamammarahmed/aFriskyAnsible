@@ -1,0 +1,11 @@
+*******************************************************
+
+		Creating Arbitory Hosts In Ansible Inventory
+
+*******************************************************
+
+# Open system hosts file
+sudo nano /etc/hosts
+
+# Type Private IP Addresses of machines and string and Save 
+172.31.88.182 node01
