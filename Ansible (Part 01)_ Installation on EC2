@@ -40,6 +40,7 @@ ssh-copy-id ip_address
 -----------------******* METHOD #02 *******--------------------
 # Create local key
 ssh-keygen
+cd .ssh
 cat id_rsa.pub >> authorized_keys
 
 # Copy the instance public key (multi.pem) to hduser's directory
