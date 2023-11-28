@@ -1,0 +1,58 @@
+jdk_package: openjdk-11-jdk
+jdk_depend: openjdk-11-jdk-headless, openjdk-11-jre, openjdk-11-jre-headless
+
+# /etct/sysctl.conf variable
+ip_tables:
+  - net.ipv6.conf.all.disable_ipv6 = 1
+  - net.ipv6.conf.default.disable_ipv6 = 1
+  - net.ipv6.conf.lo.disable_ipv6 = 1
+
+# apache hadoop url
+hadoop_url: https://dlcdn.apache.org/hadoop/common/hadoop-2.10.2/hadoop-2.10.2.tar.gz
+hadoop_user: hadoop
+hadoop_group: hadoop
+usr_local: /usr/local
+usr_local_hadoop_dir_old: "{{ usr_local }}/hadoop-2.10.2"
+usr_local_hadoop_dir: "{{ usr_local }}/hadoop"
+hadoop_tar: "{{ usr_local }}/hadoop-2.10.2.tar.gz"
+
+# bashrc-template variables
+java_home: /usr/lib/jvm/java-11-openjdk-arm64/
+hadoop_home: "{{ usr_local_hadoop_dir }}"
+hadoop_bin: "{{ hadoop_home  }}/bin"
+hadoop_sbin: "{{ hadoop_home  }}/sbin"
+mapred_home: "{{ hadoop_home  }}"
+hdfs_home: "{{ hadoop_home  }}"
+yarn_home: "{{ hadoop_home  }}" 
+hadoop_conf: "{{ hadoop_home }}/etc/hadoop"
+hadoop_user_bashrc: /home/hadoop/.bashrc
+
+# hadoop-env-template variable
+hadoop_log_dir: /var/log/hadoop
+hadoop_conf_env: "{{ hadoop_conf }}/hadoop-env.sh"
+hadoop_conf_core: "{{ hadoop_conf }}/core-site.xml"
+hadoop_conf_hdfs: "{{ hadoop_conf }}/hdfs-site.xml"
+hadoop_conf_mapred: "{{ hadoop_conf }}/mapred-site.xml"
+hadoop_conf_yarn: "{{ hadoop_conf }}/yarn-site.xml"
+
+# core-site-template
+prop_hadoop_tmp_dir: /app/hadoop/tmp
+prop_fs_defaultFS: hdfs://localhost:54310
+
+# hdfs directories
+hadoop_store: "{{ usr_local }}/hadoop_store"
+hadoop_namenode: "{{ hadoop_store }}/hdfs/namenode"
+hadoop_datanode: "{{ hadoop_store }}/hdfs/datanode"
+
+
+# hdfs-site-template variable
+prop_dfs_replication: 1
+prop_dfs_namenode_name_dir: file:{{ hadoop_namenode }}
+prop_dfs_datanode_data_dir: file:{{ hadoop_datanode }}
+
+# mapred-site-template variable
+prop_mapreduce_jobtracker_address: localhost:54311
+prop_mapreduce_framework_name: yarn
+
+# yarn-site-template variable
+prop_yarn_nodemanager_aux_services: mapreduce_shuffle
