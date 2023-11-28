@@ -1,0 +1,141 @@
+---
+
+- hosts: hadoop-node
+  become: true
+  tasks:
+
+  - name: update ubuntu package
+    apt:
+      update_cache: yes
+
+  - name: install openjdk-11-jdk
+    apt:
+      name: "{{ jdk_package  }}"
+
+  - name: disbale IP6 tables
+    template:
+      backup: yes
+      src: templates/sysctl.conf.j2
+      dest: /etc/sysctl.conf
+
+#  - name: download hadoop2 package
+#    get_url:
+#      url: "{{ hadoop_url }}"
+#      dest: "{{ usr_local }}" 
+#      owner: "{{ hadoop_user }}"
+#      group: "{{ hadoop_group }}" 
+#      mode: 0755
+       
+  - name: unzip hadoop2 package
+    unarchive:
+      src: "{{ hadoop_tar }}"
+      dest: "{{ usr_local  }}"
+      owner: "{{ hadoop_user  }}"
+      group: "{{ hadoop_group  }}"
+      mode: 0755
+      remote_src: yes
+
+  - name: rename hadoop2-version directory
+    command: "mv {{ usr_local_hadoop_dir_old }} {{ usr_local_hadoop_dir }}"
+
+  - name: update bashrc file
+    template:
+      backup: yes
+      src: templates/bashrc.j2
+      dest: "{{ hadoop_user_bashrc  }}"
+  
+  - name: refresh bashrc file
+    ansible.builtin.command:
+      cmd: "bash -l -c 'source /home/hadoop/.bashrc'"
+
+  - name: update hadoop-env.sh file
+    template:
+      backup: yes
+      src: templates/hadoop-env.j2
+      dest: "{{ hadoop_conf_env }}"
+
+  - name: update core-site.xml file
+    template:
+      backup: yes
+      src: templates/core-site.j2
+      dest: "{{ hadoop_conf_core }}"
+
+  - name: update hdfs-site.xml file
+    template:
+      backup: yes
+      src: templates/hdfs-site.j2
+      dest: "{{ hadoop_conf_hdfs }}"
+
+  - name: update mapred-site.xml file
+    template:
+      backup: yes
+      src: templates/mapred-site.j2
+      dest: "{{ hadoop_conf_mapred }}"
+
+  - name: update yarn-site.xml file
+    template:
+      backup: yes
+      src: templates/yarn-site.j2
+      dest: "{{ hadoop_conf_yarn }}"
+
+  - name: create log
+    file:
+      path: "{{ hadoop_log_dir }}"
+      state: directory
+      owner: "{{ hadoop_user }}"
+      group: "{{ hadoop_group }}"
+      mode: 0755
+
+  - name: create tmp
+    file:
+      path: "{{ prop_hadoop_tmp_dir }}"
+      state: directory
+      owner: "{{ hadoop_user }}"
+      group: "{{ hadoop_group }}"
+      mode: 0755
+
+  - name: create hadoop_store
+    file:
+      path: "{{ hadoop_store }}"
+      state: directory
+      owner: "{{ hadoop_user }}"
+      group: "{{ hadoop_group }}"
+      mode: 0755
+
+  - name: create namenode
+    file:
+      path: "{{ hadoop_namenode }}"
+      state: directory
+      owner: "{{ hadoop_user }}"
+      group: "{{ hadoop_group }}"
+      mode: 0755
+
+  - name: create datanode
+    file:
+      path: "{{ hadoop_datanode }}"
+      state: directory
+      owner: "{{ hadoop_user }}"
+      group: "{{ hadoop_group }}"
+      mode: 0755
+
+#  - name: formate namenode
+#    ansible.builtin.command:
+#      cmd: hdfs namenode -format
+
+  - name: format namenode
+    shell: "{{ hadoop_bin }}/hdfs namenode -format -force"
+
+  - name: start hdfs daemons
+    ansible.builtin.shell: "{{ hadoop_sbin }}/hadoop-daemon.sh start namenode"
+    #ansible.builtin.shell: "{{ hadoop_sbin }}/./start-dfs.sh"
+    #ansible.builtin.shell: start-dfs.sh
+
+
+  - name: start yarn daemons
+    ansible.builtin.shell: "{{ hadoop_sbin }}/./start-yarn.sh"
+    #ansible.builtin.shell: "{{ hadoop_sbin }}/./start-yarn.sh"
+    #ansible.builtin.shell: start-yarn.sh
+
+
+
+

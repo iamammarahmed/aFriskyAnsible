@@ -1,0 +1,29 @@
+---
+
+- hosts: hadoop-node
+  become: true
+  tasks:
+
+  - name: remove openjdk-11-jdk
+    apt:
+      name: "{{ jdk_package  }}, {{ jdk_depend  }}"
+      state: absent
+
+  - name: remove hadoop2 directory
+    file:
+      path: "{{ usr_local_hadoop_dir  }}"
+      state: absent
+
+#  - name: remove hadoop2 tar
+#    file:
+#     path: "{{ hadoop_tar }}"
+#     state: absent
+
+  - name: remove directories hadoop_store, namenode, datanode
+    file:
+      path: "{{ item }}"
+      state: absent
+    with_items:
+       - "{{ hadoop_store }}"
+       - "{{ hadoop_log_dir }}"
+       - "{{ prop_hadoop_tmp_dir }}" 
