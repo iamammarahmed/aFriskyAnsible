@@ -61,14 +61,3 @@
       owner: "{{ hadoop_user }}"
       group: "{{ hadoop_group }}"
       mode: 0755
-
-  handlers:
-  
-  - name: try downloading again
-    get_url:
-        url: "{{ hadoop_url }}"
-        dest: "{{ usr_local }}"
-        owner: "{{ hadoop_user }}"
-        group: "{{ hadoop_group }}"
-        mode: 0755
-

@@ -6,26 +6,6 @@
   become_user: "{{ hadoop_user }}"
   tasks:
 
-#  - name: download hadoop2 package
-#    get_url:
-#      url: "{{ hadoop_url }}"
-#      dest: "{{ usr_local }}" 
-#      owner: "{{ hadoop_user }}"
-#      group: "{{ hadoop_group }}" 
-#      mode: 0755
-       
-#  - name: unzip hadoop2 package
-#    unarchive:
-#      src: "{{ hadoop_tar }}"
-#      dest: "{{ usr_local  }}"
-#      owner: "{{ hadoop_user  }}"
-#      group: "{{ hadoop_group  }}"
-#      mode: 0755
-#      remote_src: yes
-
-#  - name: rename hadoop2-version directory
-#    command: "mv {{ usr_local_hadoop_dir_old }} {{ usr_local_hadoop_dir }}"
-
   - name: update bashrc file
     template:
       backup: yes
@@ -66,30 +46,6 @@
       src: templates/yarn-site.j2
       dest: "{{ hadoop_conf_yarn }}"
 
-#  - name: create log
-#    file:
-#      path: "{{ hadoop_log_dir }}"
-#      state: directory
-#      owner: "{{ hadoop_user }}"
-#      group: "{{ hadoop_group }}"
-#      mode: 0755
-
-#  - name: create tmp
-#    file:
-#      path: "{{ prop_hadoop_tmp_dir }}"
-#      state: directory
-#      owner: "{{ hadoop_user }}"
-#      group: "{{ hadoop_group }}"
-#      mode: 0755
-
-#  - name: create hadoop_store
-#    file:
-#      path: "{{ hadoop_store }}"
-#      state: directory
-#      owner: "{{ hadoop_user }}"
-#      group: "{{ hadoop_group }}"
-#      mode: 0755
-
   - name: create namenode
     file:
       path: "{{ hadoop_namenode }}"
@@ -106,27 +62,32 @@
       group: "{{ hadoop_group }}"
       mode: 0755
 
-#  - name: formate namenode
-#    ansible.builtin.command:
-#      cmd: hdfs namenode -format
-
   - name: format namenode
-    shell: "{{ hadoop_bin }}/hdfs namenode -format -force"
+    shell: "{{ hadoop_bin }}/hdfs namenode -format -force"  
+
+  
+  # - name: check if namenode daemon is running
+  #   ansible.builtin.shell: pgrep -fc 'org.apache.hadoop.hdfs.server.namenode.NameNode'
+  #   #register: namnode_status
+  #   #when: namnode_status is defined and namnode_status.stdout != "1"
+  #   #changed_when: false
+  #   ignore_errors: true
+  #   failed_when: "'2' in stdout"
+  #   notify: stop_namenode_daemon
+
 
   - name: start hdfs daemons
     ansible.builtin.shell: "{{ item }}" 
     with_items:
       - "{{ hadoop_sbin }}/hadoop-daemon.sh start namenode"
       - "{{ hadoop_sbin }}/hadoop-daemon.sh start secondarynamenode"
-      - "{{ hadoop_sbin }}/hadoop-daemon.sh start datanode"
-
+      #- "{{ hadoop_sbin }}/hadoop-daemon.sh start datanode"
+    ignore_errors: true
+    failed_when: "'namenode running as process' is stdout"
+    notify: stop_namenode_daemon
 
   - name: start yarn daemons
     ansible.builtin.shell: "{{ item }}"
     with_items:
       - "{{ hadoop_sbin }}/yarn-daemon.sh start resourcemanager"
       - "{{ hadoop_sbin }}/yarn-daemon.sh start nodemanager"
-
-
-
-
