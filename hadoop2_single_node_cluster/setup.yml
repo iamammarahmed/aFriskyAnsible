@@ -81,7 +81,7 @@
     with_items:
       - "{{ hadoop_sbin }}/hadoop-daemon.sh start namenode"
       - "{{ hadoop_sbin }}/hadoop-daemon.sh start secondarynamenode"
-      #- "{{ hadoop_sbin }}/hadoop-daemon.sh start datanode"
+      - "{{ hadoop_sbin }}/hadoop-daemon.sh start datanode"
     ignore_errors: true
     failed_when: "'namenode running as process' is stdout"
     notify: stop_namenode_daemon
