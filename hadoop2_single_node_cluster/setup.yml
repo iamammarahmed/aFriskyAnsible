@@ -1,22 +1,10 @@
 ---
 
+- import_playbook: bootstrap.yml
+
 - hosts: hadoop-node
-  become: true
+  become_user: "{{ hadoop_user }}"
   tasks:
-
-  - name: update ubuntu package
-    apt:
-      update_cache: yes
-
-  - name: install openjdk-11-jdk
-    apt:
-      name: "{{ jdk_package  }}"
-
-  - name: disbale IP6 tables
-    template:
-      backup: yes
-      src: templates/sysctl.conf.j2
-      dest: /etc/sysctl.conf
 
 #  - name: download hadoop2 package
 #    get_url:
@@ -26,17 +14,17 @@
 #      group: "{{ hadoop_group }}" 
 #      mode: 0755
        
-  - name: unzip hadoop2 package
-    unarchive:
-      src: "{{ hadoop_tar }}"
-      dest: "{{ usr_local  }}"
-      owner: "{{ hadoop_user  }}"
-      group: "{{ hadoop_group  }}"
-      mode: 0755
-      remote_src: yes
+#  - name: unzip hadoop2 package
+#    unarchive:
+#      src: "{{ hadoop_tar }}"
+#      dest: "{{ usr_local  }}"
+#      owner: "{{ hadoop_user  }}"
+#      group: "{{ hadoop_group  }}"
+#      mode: 0755
+#      remote_src: yes
 
-  - name: rename hadoop2-version directory
-    command: "mv {{ usr_local_hadoop_dir_old }} {{ usr_local_hadoop_dir }}"
+#  - name: rename hadoop2-version directory
+#    command: "mv {{ usr_local_hadoop_dir_old }} {{ usr_local_hadoop_dir }}"
 
   - name: update bashrc file
     template:
@@ -78,29 +66,29 @@
       src: templates/yarn-site.j2
       dest: "{{ hadoop_conf_yarn }}"
 
-  - name: create log
-    file:
-      path: "{{ hadoop_log_dir }}"
-      state: directory
-      owner: "{{ hadoop_user }}"
-      group: "{{ hadoop_group }}"
-      mode: 0755
+#  - name: create log
+#    file:
+#      path: "{{ hadoop_log_dir }}"
+#      state: directory
+#      owner: "{{ hadoop_user }}"
+#      group: "{{ hadoop_group }}"
+#      mode: 0755
 
-  - name: create tmp
-    file:
-      path: "{{ prop_hadoop_tmp_dir }}"
-      state: directory
-      owner: "{{ hadoop_user }}"
-      group: "{{ hadoop_group }}"
-      mode: 0755
+#  - name: create tmp
+#    file:
+#      path: "{{ prop_hadoop_tmp_dir }}"
+#      state: directory
+#      owner: "{{ hadoop_user }}"
+#      group: "{{ hadoop_group }}"
+#      mode: 0755
 
-  - name: create hadoop_store
-    file:
-      path: "{{ hadoop_store }}"
-      state: directory
-      owner: "{{ hadoop_user }}"
-      group: "{{ hadoop_group }}"
-      mode: 0755
+#  - name: create hadoop_store
+#    file:
+#      path: "{{ hadoop_store }}"
+#      state: directory
+#      owner: "{{ hadoop_user }}"
+#      group: "{{ hadoop_group }}"
+#      mode: 0755
 
   - name: create namenode
     file:
@@ -129,7 +117,7 @@
     ansible.builtin.shell: "{{ item }}" 
     with_items:
       - "{{ hadoop_sbin }}/hadoop-daemon.sh start namenode"
-      - "{{ hadoop_sbin }}/hadoop-daemon.sh start seondarynamenode"
+      - "{{ hadoop_sbin }}/hadoop-daemon.sh start secondarynamenode"
       - "{{ hadoop_sbin }}/hadoop-daemon.sh start datanode"
 
 

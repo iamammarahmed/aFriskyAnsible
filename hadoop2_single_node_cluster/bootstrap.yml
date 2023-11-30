@@ -1,0 +1,74 @@
+---
+
+- hosts: hadoop-node
+  become: true
+  tasks:
+
+  - name: update ubuntu package
+    apt:
+      update_cache: yes
+
+  - name: install openjdk-7-jdk
+    apt:
+      name: "{{ jdk_package  }}"
+
+  - name: disbale IP6 tables
+    template:
+      backup: yes
+      src: templates/sysctl.conf.j2
+      dest: /etc/sysctl.conf
+
+  - name: download hadoop2 package
+    get_url:
+      url: "{{ hadoop_url }}"
+      dest: "{{ usr_local }}"
+      owner: "{{ hadoop_user }}"
+      group: "{{ hadoop_group }}"
+      mode: 0755
+       
+  - name: unzip hadoop2 package
+    unarchive:
+      src: "{{ hadoop_tar }}"
+      dest: "{{ usr_local  }}"
+      owner: "{{ hadoop_user  }}"
+      group: "{{ hadoop_group  }}"
+      mode: 0755
+      remote_src: yes
+
+  - name: rename hadoop2-version directory
+    command: "mv {{ usr_local_hadoop_dir_old }} {{ usr_local_hadoop_dir }}"
+
+  - name: create "{{ hadoop_log_dir }}"
+    file:
+      path: "{{ hadoop_log_dir }}"
+      state: directory
+      owner: "{{ hadoop_user }}"
+      group: "{{ hadoop_group }}"
+      mode: 0755
+
+  - name: create tmp
+    file:
+      path: "{{ prop_hadoop_tmp_dir }}"
+      state: directory
+      owner: "{{ hadoop_user }}"
+      group: "{{ hadoop_group }}"
+      mode: 0755
+
+  - name: create hadoop_store
+    file:
+      path: "{{ hadoop_store }}"
+      state: directory
+      owner: "{{ hadoop_user }}"
+      group: "{{ hadoop_group }}"
+      mode: 0755
+
+  handlers:
+  
+  - name: try downloading again
+    get_url:
+        url: "{{ hadoop_url }}"
+        dest: "{{ usr_local }}"
+        owner: "{{ hadoop_user }}"
+        group: "{{ hadoop_group }}"
+        mode: 0755
+
