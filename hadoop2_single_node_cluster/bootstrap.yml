@@ -8,7 +8,7 @@
     apt:
       update_cache: yes
 
-  - name: install openjdk-7-jdk
+  - name: install openjdk-8-jdk
     apt:
       name: "{{ jdk_package  }}"
 
@@ -46,7 +46,7 @@
       group: "{{ hadoop_group }}"
       mode: 0755
 
-  - name: create tmp
+  - name: create "{{ prop_hadoop_tmp_dir }}"
     file:
       path: "{{ prop_hadoop_tmp_dir }}"
       state: directory
